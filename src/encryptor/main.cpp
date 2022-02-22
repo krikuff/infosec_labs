@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     }
     catch( ShowHelpAndExit& )
     {
-        ShowHelp( "Simple encryption/decryption utility.", GetOptionsDescription() );
+        cout << GetHelpString( "Simple encryption/decryption utility.", GetOptionsDescription() );
     }
     catch( ShowVersionAndExit& )
     {

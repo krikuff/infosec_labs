@@ -1,7 +1,6 @@
 #include <encryptor/general_functions.h>
 
 #include <fstream>
-#include <iostream>
 
 #include <config.h>
 

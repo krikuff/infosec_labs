@@ -16,6 +16,6 @@ struct OptionDescription
 using OptionsDescriptionMap = unordered_map<string, OptionDescription>;
 using OptionsMap = unordered_map<string, string>;
 
-void ShowHelp(string const& programDescription, OptionsDescriptionMap const& options);
+string GetHelpString(string const& programDescription, OptionsDescriptionMap const& options);
 
 OptionsMap ParseOptions(int argc, char** argv, OptionsDescriptionMap const& knownOptions);

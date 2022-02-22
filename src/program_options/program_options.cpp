@@ -1,16 +1,14 @@
 #include <program_options/program_options.h>
 
 #include <algorithm>
-#include <iostream>
-#include <sstream>
+#include <stdexcept>
 #include <vector>
 
 namespace {
 
 string OptionsToString(OptionsDescriptionMap const& options)
 {
-    stringstream ret;
-    ret << "Options:";
+    string ret ("Options:");
     for(auto& option : options)
     {
         string parameter(11, ' ');
@@ -18,16 +16,16 @@ string OptionsToString(OptionsDescriptionMap const& options)
         {
             parameter = "<parameter>";
         }
-        ret << "\n    " << option.first << " " << parameter << " " << option.second.description;
+        ret += "\n    " + option.first + " " + parameter + " " + option.second.description;
     }
-    return ret.str();
+    return ret;
 }
 
 } // namespace anonymous
 
-void ShowHelp(string const& programDescription, OptionsDescriptionMap const& options)
+string GetHelpString(string const& programDescription, OptionsDescriptionMap const& options)
 {
-    cout << programDescription << "\n" << OptionsToString(options);
+    return programDescription + "\n" + OptionsToString(options);
 }
 
 OptionsMap ParseOptions(int argc, char** argv, OptionsDescriptionMap const& knownOptions)
