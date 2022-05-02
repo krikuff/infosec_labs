@@ -6,21 +6,19 @@
 #include <cyphers/magic_square_cypher.h>
 #include <encryptor/general_functions.h>
 
-using namespace std;
-
 int main(int argc, char** argv)
 {
     try
     {
         const auto programData = ProcessArguments(argc, argv);
 
-        const string configData = ReadFileContents( programData.configFileName );
-        const string inputData = ReadFileContents( programData.inputFileName );
+        const std::string configData = ReadFileContents( programData.configFileName );
+        const std::string inputData = ReadFileContents( programData.inputFileName );
 
-        unique_ptr<ICypher> cypher = make_unique< MagicSquareCypher >();
+        std::unique_ptr<ICypher> cypher = std::make_unique< MagicSquareCypher >();
         cypher->Configure(configData);
 
-        string result;
+        std::string result;
         switch(programData.action)
         {
             case ProgramAction::Encrypt:
@@ -35,20 +33,20 @@ int main(int argc, char** argv)
     }
     catch( ShowHelpAndExit& )
     {
-        cout << GetHelpString( "Simple encryption/decryption utility.", GetOptionsDescription() );
+        std::cout << GetHelpString( "Simple encryption/decryption utility.", GetOptionsDescription() );
     }
     catch( ShowVersionAndExit& )
     {
-        cout << GetProjectVersionString() << endl;
+        std::cout << GetProjectVersionString() << std::endl;
     }
-    catch( exception& e )
+    catch( std::exception& e )
     {
-        cerr << "Error: " << e.what() << endl;
+        std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
     catch( ... )
     {
-        cerr << "Critical error!" << endl;
+        std::cerr << "Critical error!" << std::endl;
         return 2;
     }
 

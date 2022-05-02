@@ -6,22 +6,22 @@
 
 namespace {
 
-const string DefaultInputFileName  = "input.txt";
-const string DefaultOutputFileName = "output.txt";
-const string DefaultConfigFileName = "config.txt";
+const std::string DefaultInputFileName  = "input.txt";
+const std::string DefaultOutputFileName = "output.txt";
+const std::string DefaultConfigFileName = "config.txt";
 
 } // namespace anonymous
 
-string ReadFileContents(string const& filename)
+std::string ReadFileContents(std::string const& filename)
 {
-    ifstream file(filename);
+    std::ifstream file(filename);
     if( !file.good() )
     {
-        throw runtime_error("Couldn't open file " + filename);
+        throw std::runtime_error("Couldn't open file " + filename);
     }
 
-    string contents;
-    string line;
+    std::string contents;
+    std::string line;
     while( getline(file, line) )
     {
         contents += line + '\n';
@@ -32,10 +32,10 @@ string ReadFileContents(string const& filename)
 
 void WriteToFile(std::string const& data, std::string const& filename)
 {
-    ofstream file(filename);
+    std::ofstream file(filename);
     if( !file.good() )
     {
-        throw runtime_error("Couldn't open file " + filename);
+        throw std::runtime_error("Couldn't open file " + filename);
     }
 
     file << data;
@@ -55,9 +55,9 @@ OptionsDescriptionMap GetOptionsDescription()
     };
 }
 
-string GetProjectVersionString()
+std::string GetProjectVersionString()
 {
-    return string( PROJECT_NAME ) + " " + PROJECT_VERSION;
+    return std::string( PROJECT_NAME ) + " " + PROJECT_VERSION;
 }
 
 // Получение настроек из переданных аргументов

@@ -5,18 +5,16 @@
 
 #include <program_options/program_options.h>
 
-using namespace std;
-
 // Исключение, нужное чтобы показать инструкцию и корректно завершиться
-struct ShowHelpAndExit : public exception
+struct ShowHelpAndExit : public std::exception
 {
-    using exception::exception::exception;
+    using std::exception::exception::exception;
 };
 
 // Исключение, нужное чтобы показать версию и корректно завершиться
-struct ShowVersionAndExit : public exception
+struct ShowVersionAndExit : public std::exception
 {
-    using exception::exception::exception;
+    using std::exception::exception::exception;
 };
 
 // Действие, требуемое от программы
@@ -28,9 +26,9 @@ enum ProgramAction
 
 struct ProgramSettings
 {
-    string inputFileName;
-    string outputFileName;
-    string configFileName;
+    std::string inputFileName;
+    std::string outputFileName;
+    std::string configFileName;
     ProgramAction action;
 };
 
@@ -41,7 +39,7 @@ void WriteToFile(std::string const& data, std::string const& filename);
 // Определение поддерживаемых аргументов командной строки
 OptionsDescriptionMap GetOptionsDescription();
 
-string GetProjectVersionString();
+std::string GetProjectVersionString();
 
 // Получение настроек из переданных аргументов
 ProgramSettings ProcessArguments(int argc, char** argv);

@@ -1,17 +1,16 @@
 #include <program_options/program_options.h>
 
-#include <algorithm>
 #include <stdexcept>
 #include <vector>
 
 namespace {
 
-string OptionsToString(OptionsDescriptionMap const& options)
+std::string OptionsToString(OptionsDescriptionMap const& options)
 {
-    string ret ("Options:");
+    std::string ret ("Options:");
     for(auto& option : options)
     {
-        string parameter(11, ' ');
+        std::string parameter(11, ' ');
         if( option.second.parameterRequired )
         {
             parameter = "<parameter>";
@@ -23,7 +22,7 @@ string OptionsToString(OptionsDescriptionMap const& options)
 
 } // namespace anonymous
 
-string GetHelpString(string const& programDescription, OptionsDescriptionMap const& options)
+std::string GetHelpString(std::string const& programDescription, OptionsDescriptionMap const& options)
 {
     return programDescription + "\n" + OptionsToString(options);
 }
@@ -33,24 +32,24 @@ OptionsMap ParseOptions(int argc, char** argv, OptionsDescriptionMap const& know
     OptionsMap options;
     for(int i = 1; i < argc; ++i)
     {
-        string arg(argv[i]);
-        auto& param = options[arg];
+        std::string arg(argv[i]);
         if( !knownOptions.count(arg) )
         {
-            throw invalid_argument(
+            throw std::invalid_argument(
                 "Found option \"" + arg + "\" which wasn't expected.\n" + OptionsToString(knownOptions)
             );
         }
 
+        auto& param = options[arg];
         if( knownOptions.at(arg).parameterRequired )
         {
             ++i;
             if( i >= argc )
             {
-                throw runtime_error("Option \"" + arg + "\" needs a parameter");
+                throw std::runtime_error("Option \"" + arg + "\" needs a parameter");
             }
 
-            param = string( argv[i] );
+            param = std::string( argv[i] );
         }
     }
 

@@ -1,8 +1,8 @@
 #include <cyphers/magic_square_cypher.h>
 
-#include <algorithm>
 #include <cmath>
 #include <numeric>
+#include <ranges>
 #include <sstream>
 #include <stdexcept>
 
@@ -12,7 +12,7 @@ const size_t DefaultSquareSize = 16;
 
 } // namespace anonymous
 
-void MagicSquareCypher::Configure(string const& config)
+void MagicSquareCypher::Configure(std::string const& config)
 {
     auto square = ParseSquare(config);
     CheckSquareForMagic(square);
@@ -31,7 +31,7 @@ void MagicSquareCypher::Configure(string const& config)
     }
 }
 
-string MagicSquareCypher::Pass(vector<int> const& square, string const& input)
+std::string MagicSquareCypher::Pass(std::vector<int> const& square, std::string const& input)
 {
     const size_t inputSize = input.size();
     const size_t squareSize = square.size();
@@ -41,7 +41,7 @@ string MagicSquareCypher::Pass(vector<int> const& square, string const& input)
         ++blockCount;
     }
 
-    string output( blockCount * squareSize, ' ' );
+    std::string output( blockCount * squareSize, ' ' );
 
     for( size_t i = 0; i < inputSize; ++i )
     {
@@ -55,28 +55,29 @@ string MagicSquareCypher::Pass(vector<int> const& square, string const& input)
     return output;
 }
 
-string MagicSquareCypher::Encrypt(string const& input)
+std::string MagicSquareCypher::Encrypt(std::string const& input)
 {
     return Pass(encryptionSquare_, input);
 }
-string MagicSquareCypher::Decrypt(string const& input)
+std::string MagicSquareCypher::Decrypt(std::string const& input)
 {
     return Pass(decryptionSquare_, input);
 }
 
-vector<int> MagicSquareCypher::ParseSquare(string const& str)
+std::vector<int> MagicSquareCypher::ParseSquare(std::string const& str)
 {
-    vector<int> square;
+    std::vector<int> square;
     square.reserve( DefaultSquareSize );
-    stringstream ss(str);
-    int number;
-    while(ss >> number)
+
+    for( std::istringstream ss(str);
+         auto number : std::ranges::istream_view<int>(ss) )
     {
-        square.emplace_back(number);
+        square.emplace_back( number );
     }
+
     if(square.size() == 0)
     {
-        throw invalid_argument("Couldn't parse any numbers from config");
+        throw std::invalid_argument("Couldn't parse any numbers from config");
     }
 
     // Проверка на квадратность
@@ -84,13 +85,13 @@ vector<int> MagicSquareCypher::ParseSquare(string const& str)
     const size_t sideLen = sqrt( squareSize );
     if( sideLen * sideLen != squareSize && squareSize != 1 )
     {
-        throw invalid_argument("Incorrect square size");
+        throw std::invalid_argument("Incorrect square size");
     }
 
     return square;
 }
 
-void MagicSquareCypher::CheckSquareForMagic(vector<int> const& square)
+void MagicSquareCypher::CheckSquareForMagic(std::vector<int> const& square)
 {
     const size_t squareSize = square.size();
     const size_t sideLen = sqrt( squareSize );
@@ -104,7 +105,7 @@ void MagicSquareCypher::CheckSquareForMagic(vector<int> const& square)
         const int sum = accumulate(begin, begin + sideLen, 0);
         if(sum != sampleSum)
         {
-            throw invalid_argument("Row sums are not equal");
+            throw std::invalid_argument("Row sums are not equal");
         }
     }
 
@@ -119,7 +120,7 @@ void MagicSquareCypher::CheckSquareForMagic(vector<int> const& square)
 
         if(sum != sampleSum)
         {
-            throw invalid_argument("Column sums are not equal");
+            throw std::invalid_argument("Column sums are not equal");
         }
     }
 
@@ -131,7 +132,7 @@ void MagicSquareCypher::CheckSquareForMagic(vector<int> const& square)
     }
     if(diagonalSum != sampleSum)
     {
-        throw invalid_argument("Primary diagonal sum doesn't fit");
+        throw std::invalid_argument("Primary diagonal sum doesn't fit");
     }
 
     diagonalSum = square.at(sideLen - 1);
@@ -141,6 +142,6 @@ void MagicSquareCypher::CheckSquareForMagic(vector<int> const& square)
     }
     if(diagonalSum != sampleSum)
     {
-        throw invalid_argument("Secondary diagonal sum doesn't fit");
+        throw std::invalid_argument("Secondary diagonal sum doesn't fit");
     }
 }
