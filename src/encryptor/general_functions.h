@@ -24,13 +24,23 @@ enum ProgramAction
     Decrypt,
 };
 
+enum class CypherType
+{
+    MagicSquare,
+};
+
 struct ProgramSettings
 {
     std::string inputFileName;
     std::string outputFileName;
     std::string configFileName;
     ProgramAction action;
+    CypherType cypher;
 };
+
+std::string CypherToString(CypherType cypher);
+
+CypherType StringToCypher(std::string const& cypher);
 
 std::string ReadFileContents(std::string const& filename);
 

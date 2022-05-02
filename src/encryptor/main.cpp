@@ -15,18 +15,26 @@ int main(int argc, char** argv)
         const std::string configData = ReadFileContents( programData.configFileName );
         const std::string inputData = ReadFileContents( programData.inputFileName );
 
-        std::unique_ptr<ICypher> cypher = std::make_unique< MagicSquareCypher >();
-        cypher->Configure(configData);
-
         std::string result;
-        switch(programData.action)
+        switch( programData.cypher )
         {
-            case ProgramAction::Encrypt:
-                result = cypher->Encrypt(inputData);
+            case CypherType::MagicSquare:
+            {
+                MagicSquareCypher cypher(configData);
+
+                switch(programData.action)
+                {
+                    case ProgramAction::Encrypt:
+                        result = cypher.Encrypt(inputData);
+                        break;
+                    case ProgramAction::Decrypt:
+                        result = cypher.Decrypt(inputData);
+                        break;
+                }
                 break;
-            case ProgramAction::Decrypt:
-                result = cypher->Decrypt(inputData);
-                break;
+            }
+            default:
+                throw std::runtime_error( "No cypher type given" );
         }
 
         WriteToFile(result, programData.outputFileName);

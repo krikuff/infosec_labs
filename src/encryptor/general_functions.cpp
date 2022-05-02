@@ -10,7 +10,30 @@ const std::string DefaultInputFileName  = "input.txt";
 const std::string DefaultOutputFileName = "output.txt";
 const std::string DefaultConfigFileName = "config.txt";
 
+const CypherType DefaultCypher = CypherType::MagicSquare;
+
 } // namespace anonymous
+
+std::string CypherToString(CypherType cypher)
+{
+    switch( cypher )
+    {
+        case CypherType::MagicSquare:
+            return "MagicSquare";
+        default:
+            throw std::invalid_argument("Couldn't convert cypher of unknown type to string");
+    }
+}
+
+CypherType StringToCypher(std::string const& cypher)
+{
+    if( cypher == "MagicSquare" )
+    {
+        return CypherType::MagicSquare;
+    }
+
+    throw std::invalid_argument("Couldn't parse cypher from string");
+}
 
 std::string ReadFileContents(std::string const& filename)
 {
@@ -49,6 +72,7 @@ OptionsDescriptionMap GetOptionsDescription()
         {"-i", {"set input file  (default is \"" + DefaultInputFileName  + "\")", OPTION_PARAMETER_REQUIRED }},
         {"-o", {"set output file (default is \"" + DefaultOutputFileName + "\")", OPTION_PARAMETER_REQUIRED }},
         {"-c", {"set config file (default is \"" + DefaultConfigFileName + "\")", OPTION_PARAMETER_REQUIRED }},
+        {"-m", {"set encryption method\"" + CypherToString(DefaultCypher) + "\"", OPTION_PARAMETER_REQUIRED }},
         {"-e", {"encrypt input (default action)" }},
         {"-d", {"decrypt input" }},
         {"-v", {"show version" }},
@@ -65,7 +89,15 @@ ProgramSettings ProcessArguments(int argc, char** argv)
 {
     auto options = ParseOptions( argc, argv, GetOptionsDescription() );
 
-    ProgramSettings settings{ DefaultInputFileName, DefaultOutputFileName, DefaultConfigFileName, ProgramAction::Encrypt };
+    ProgramSettings settings
+    {
+        DefaultInputFileName,
+        DefaultOutputFileName,
+        DefaultConfigFileName,
+        ProgramAction::Encrypt,
+        DefaultCypher
+    };
+
     if (options.count("-h"))
     {
         throw ShowHelpAndExit();
@@ -74,6 +106,13 @@ ProgramSettings ProcessArguments(int argc, char** argv)
     {
         throw ShowVersionAndExit();
     }
+
+    if (options.count("-m"))
+    {
+        settings.cypher = StringToCypher( options["-m"] );
+    }
+
+    // TODO: сделать инпут и аутпут зависимыми от типа шифра. Ну или унифицировать на уровне шифров
     if (options.count("-i"))
     {
         settings.inputFileName = options["-i"];
@@ -86,11 +125,12 @@ ProgramSettings ProcessArguments(int argc, char** argv)
     {
         settings.configFileName = options["-c"];
     }
+
     if (options.count("-d"))
     {
         settings.action = ProgramAction::Decrypt;
     }
-    if (options.count("-e"))
+    else if (options.count("-e"))
     {
         settings.action = ProgramAction::Encrypt;
     }

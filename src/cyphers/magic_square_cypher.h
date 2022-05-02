@@ -1,22 +1,23 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
-#include <cyphers/i_cypher.h>
-
 // Шифр, использующий магический квадрат
-class MagicSquareCypher final : public ICypher
+class MagicSquareCypher final
 {
 public:
+
+    explicit MagicSquareCypher(std::string const& square);
 
     // Задать магический квадрат
     // Параметр config содержит квадрат n на n целых чисел от 1 до n в строковом представлении.
     // Если в config не квадрат, либо квадрат не магический, то вылетает исключение
-    virtual void Configure(std::string const& config) override;
+    void Configure(std::string const& square);
 
-    virtual std::string Encrypt(std::string const& input) override;
+    std::string Encrypt(std::string const& input);
 
-    virtual std::string Decrypt(std::string const& input) override;
+    std::string Decrypt(std::string const& input);
 
 private:
     // Имплементация алгоритма шифровки/расшифровки

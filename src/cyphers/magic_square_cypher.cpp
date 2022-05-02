@@ -12,6 +12,11 @@ const size_t DefaultSquareSize = 16;
 
 } // namespace anonymous
 
+MagicSquareCypher::MagicSquareCypher(std::string const& square)
+{
+    Configure(square);
+}
+
 void MagicSquareCypher::Configure(std::string const& config)
 {
     auto square = ParseSquare(config);

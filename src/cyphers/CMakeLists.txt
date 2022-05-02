@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.22)
 project(cyphers)
 
 set(HEADERS
-    i_cypher.h
     magic_square_cypher.h
     )
 
