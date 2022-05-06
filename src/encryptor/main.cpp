@@ -12,32 +12,59 @@ int main( int argc, char** argv )
     {
         auto const programData = ProcessArguments( argc, argv );
 
-        const std::string configData = ReadFileContents( programData.configFileName );
-        const std::string inputData = ReadFileContents( programData.inputFileName );
-
-        std::string result;
-        switch( programData.cypher )
+        const std::string keyData = ReadFileContents( programData.keyFileName );
+        if( keyData.empty() )
         {
-            case CypherType::MagicSquare:
-            {
-                MagicSquareCypher cypher( configData );
-
-                switch( programData.action )
-                {
-                    case ProgramAction::Encrypt:
-                        result = cypher.Encrypt( inputData );
-                        break;
-                    case ProgramAction::Decrypt:
-                        result = cypher.Decrypt( inputData );
-                        break;
-                }
-                break;
-            }
-            default:
-                throw std::runtime_error( "No cypher type given" );
+            throw std::runtime_error( "Empty key file" );
         }
 
-        WriteToFile( result, programData.outputFileName );
+        const std::string inputData = [ & ]()
+        {
+            if( programData.inputFileName.has_value() )
+            {
+                return ReadFileContents( programData.inputFileName.value() );
+            }
+            else
+            {
+                return ReadContents( std::cin );
+            }
+        }();
+
+        if( inputData.empty() )
+        {
+            return 0;
+        }
+
+        const std::string result = [ & ]()
+        {
+            switch( programData.cypher )
+            {
+                case CypherType::MagicSquare:
+                {
+                    MagicSquareCypher cypher( keyData );
+
+                    switch( programData.action )
+                    {
+                        case ProgramAction::Encrypt:
+                            return cypher.Encrypt( inputData );
+                        case ProgramAction::Decrypt:
+                            return cypher.Decrypt( inputData );
+                    }
+                    break;
+                }
+                default:
+                    throw std::runtime_error( "No cypher type given" );
+            }
+        }();
+
+        if( programData.outputFileName.has_value() )
+        {
+            WriteToFile( result, programData.outputFileName.value() );
+        }
+        else
+        {
+            std::cout << result;
+        }
     }
     catch( ShowHelpAndExit& )
     {

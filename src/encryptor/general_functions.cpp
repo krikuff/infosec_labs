@@ -7,9 +7,7 @@
 namespace
 {
 
-const std::string DefaultInputFileName = "input.txt";
-const std::string DefaultOutputFileName = "output.txt";
-const std::string DefaultConfigFileName = "config.txt";
+const std::string DefaultKeyFileName = "key.txt";
 
 const CypherType DefaultCypher = CypherType::MagicSquare;
 
@@ -44,14 +42,7 @@ std::string ReadFileContents( std::string const& filename )
         throw std::runtime_error( "Couldn't open file " + filename );
     }
 
-    std::string contents;
-    std::string line;
-    while( getline( file, line ) )
-    {
-        contents += line + '\n';
-    }
-    contents.pop_back();
-    return contents;
+    return ReadContents( file );
 }
 
 void WriteToFile( std::string const& data, std::string const& filename )
@@ -70,9 +61,9 @@ OptionsDescriptionMap GetOptionsDescription()
 {
     return {
         { "-h", { "show this help and exit" } },
-        { "-i", { "set input file  (default is \"" + DefaultInputFileName + "\")", OPTION_PARAMETER_REQUIRED } },
-        { "-o", { "set output file (default is \"" + DefaultOutputFileName + "\")", OPTION_PARAMETER_REQUIRED } },
-        { "-c", { "set config file (default is \"" + DefaultConfigFileName + "\")", OPTION_PARAMETER_REQUIRED } },
+        { "-i", { "set input file  (reads from stdin if not specified)", OPTION_PARAMETER_REQUIRED } },
+        { "-o", { "set output file (prints to stdout if not specified)", OPTION_PARAMETER_REQUIRED } },
+        { "-k", { "set config file (default is \"" + DefaultKeyFileName + "\")", OPTION_PARAMETER_REQUIRED } },
         { "-m", { "set encryption method\"" + CypherToString( DefaultCypher ) + "\"", OPTION_PARAMETER_REQUIRED } },
         { "-e", { "encrypt input (default action)" } },
         { "-d", { "decrypt input" } },
@@ -80,15 +71,17 @@ OptionsDescriptionMap GetOptionsDescription()
     };
 }
 
-std::string GetProjectVersionString() { return std::string( PROJECT_NAME ) + " " + PROJECT_VERSION; }
+std::string GetProjectVersionString()
+{
+    return std::string( PROJECT_NAME ) + " " + PROJECT_VERSION;
+}
 
 // Получение настроек из переданных аргументов
 ProgramSettings ProcessArguments( int argc, char** argv )
 {
     auto options = ParseOptions( argc, argv, GetOptionsDescription() );
 
-    ProgramSettings settings{ DefaultInputFileName, DefaultOutputFileName, DefaultConfigFileName,
-                              ProgramAction::Encrypt, DefaultCypher };
+    ProgramSettings settings{ std::nullopt, std::nullopt, DefaultKeyFileName, ProgramAction::Encrypt, DefaultCypher };
 
     if( options.count( "-h" ) )
     {
@@ -113,9 +106,9 @@ ProgramSettings ProcessArguments( int argc, char** argv )
     {
         settings.outputFileName = options[ "-o" ];
     }
-    if( options.count( "-c" ) )
+    if( options.count( "-k" ) )
     {
-        settings.configFileName = options[ "-c" ];
+        settings.keyFileName = options[ "-k" ];
     }
 
     if( options.count( "-d" ) )

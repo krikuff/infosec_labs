@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <stdexcept>
 #include <string>
 
@@ -31,9 +32,9 @@ enum class CypherType
 
 struct ProgramSettings
 {
-    std::string inputFileName;
-    std::string outputFileName;
-    std::string configFileName;
+    std::optional<std::string> inputFileName;
+    std::optional<std::string> outputFileName;
+    std::string keyFileName;
     ProgramAction action;
     CypherType cypher;
 };
@@ -53,3 +54,16 @@ std::string GetProjectVersionString();
 
 // Получение настроек из переданных аргументов
 ProgramSettings ProcessArguments( int argc, char** argv );
+
+template<typename T>
+std::string ReadContents( T& stream )
+{
+    std::string contents;
+    std::string line;
+    while( getline( stream, line ) )
+    {
+        contents += line + '\n';
+    }
+    contents.pop_back();
+    return contents;
+}
