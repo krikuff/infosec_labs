@@ -56,7 +56,6 @@ void WriteToFile( std::string const& data, std::string const& filename )
     file << data;
 }
 
-// Определение поддерживаемых аргументов командной строки
 OptionsDescriptionMap GetOptionsDescription()
 {
     return {
@@ -76,7 +75,6 @@ std::string GetProjectVersionString()
     return std::string( PROJECT_NAME ) + " " + PROJECT_VERSION;
 }
 
-// Получение настроек из переданных аргументов
 ProgramSettings ProcessArguments( int argc, char** argv )
 {
     auto options = ParseOptions( argc, argv, GetOptionsDescription() );
@@ -97,7 +95,7 @@ ProgramSettings ProcessArguments( int argc, char** argv )
         settings.cypher = StringToCypher( options[ "-m" ] );
     }
 
-    // TODO: сделать инпут и аутпут зависимыми от типа шифра. Ну или унифицировать на уровне шифров
+    // TODO: make input and output depend on cypher
     if( options.count( "-i" ) )
     {
         settings.inputFileName = options[ "-i" ];

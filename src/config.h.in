@@ -1,10 +1,10 @@
 #pragma once
 
-// .h генерируется CMake автоматически
+// .h is generated automatically
 
-#if !defined(PROJECT_VERSION)
+#if !defined( PROJECT_VERSION )
 #define PROJECT_VERSION "@CMAKE_PROJECT_VERSION@"
 #endif
-#if !defined(PROJECT_NAME)
+#if !defined( PROJECT_NAME )
 #define PROJECT_NAME "@CMAKE_PROJECT_NAME@"
 #endif

@@ -29,7 +29,7 @@ void MagicSquareCypher::Configure( std::string const& config )
         --number;
     }
 
-    // меняем местами индексы и значения, чтобы ускорить шифрование
+    // exchange indices and values to speed up encryption
     encryptionSquare_.resize( decryptionSquare_.size() );
     for( size_t i = 0; i < encryptionSquare_.size(); ++i )
     {
@@ -41,7 +41,7 @@ std::string MagicSquareCypher::Pass( std::vector<int> const& square, std::string
 {
     const size_t inputSize = input.size();
     const size_t squareSize = square.size();
-    size_t blockCount = inputSize / squareSize; // количество квадратов, нужное для шифрования текста
+    size_t blockCount = inputSize / squareSize; // number of squares needed to encrypt input
     if( inputSize % squareSize != 0 )
     {
         ++blockCount;
@@ -86,7 +86,7 @@ std::vector<int> MagicSquareCypher::ParseSquare( std::string const& str )
         throw std::invalid_argument( "Couldn't parse any numbers from config" );
     }
 
-    // Проверка на квадратность
+    // Check for squarity
     const size_t squareSize = square.size();
     const size_t sideLen = sqrt( squareSize );
     if( sideLen * sideLen != squareSize && squareSize != 1 )
@@ -102,10 +102,10 @@ void MagicSquareCypher::CheckSquareForMagic( std::vector<int> const& square )
     const size_t squareSize = square.size();
     const size_t sideLen = sqrt( squareSize );
 
-    // За эталон берется сумма первой строки
+    // Let first row sum as the sample
     int const sampleSum = accumulate( square.begin(), square.begin() + sideLen, 0 );
 
-    // Проверка равенства сумм строк
+    // Check row sums equalness
     for( auto begin = square.begin() + sideLen; begin != square.end(); begin += sideLen )
     {
         int const sum = accumulate( begin, begin + sideLen, 0 );
@@ -115,7 +115,7 @@ void MagicSquareCypher::CheckSquareForMagic( std::vector<int> const& square )
         }
     }
 
-    // Проверка равенства сумм столбцов
+    // Check column sums equalness
     for( int i = 0; i < sideLen; ++i )
     {
         int sum = square.at( i );
@@ -130,7 +130,7 @@ void MagicSquareCypher::CheckSquareForMagic( std::vector<int> const& square )
         }
     }
 
-    // Проверка равенства сумм диагоналей
+    // Check diagonal sums equalness
     int diagonalSum = square.at( 0 );
     for( int i = sideLen + 1; i < squareSize; i += sideLen + 1 )
     {
