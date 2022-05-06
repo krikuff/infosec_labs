@@ -14,6 +14,6 @@ struct OptionDescription
 using OptionsDescriptionMap = std::unordered_map<std::string, OptionDescription>;
 using OptionsMap = std::unordered_map<std::string, std::string>;
 
-std::string GetHelpString(std::string const& programDescription, OptionsDescriptionMap const& options);
+std::string GetHelpString( std::string const& programDescription, OptionsDescriptionMap const& options );
 
-OptionsMap ParseOptions(int argc, char** argv, OptionsDescriptionMap const& knownOptions);
+OptionsMap ParseOptions( int argc, char** argv, OptionsDescriptionMap const& knownOptions );

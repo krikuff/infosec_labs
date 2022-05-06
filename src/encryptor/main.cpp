@@ -6,11 +6,11 @@
 #include <cyphers/magic_square_cypher.h>
 #include <encryptor/general_functions.h>
 
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
     try
     {
-        const auto programData = ProcessArguments(argc, argv);
+        auto const programData = ProcessArguments( argc, argv );
 
         const std::string configData = ReadFileContents( programData.configFileName );
         const std::string inputData = ReadFileContents( programData.inputFileName );
@@ -20,15 +20,15 @@ int main(int argc, char** argv)
         {
             case CypherType::MagicSquare:
             {
-                MagicSquareCypher cypher(configData);
+                MagicSquareCypher cypher( configData );
 
-                switch(programData.action)
+                switch( programData.action )
                 {
                     case ProgramAction::Encrypt:
-                        result = cypher.Encrypt(inputData);
+                        result = cypher.Encrypt( inputData );
                         break;
                     case ProgramAction::Decrypt:
-                        result = cypher.Decrypt(inputData);
+                        result = cypher.Decrypt( inputData );
                         break;
                 }
                 break;
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
                 throw std::runtime_error( "No cypher type given" );
         }
 
-        WriteToFile(result, programData.outputFileName);
+        WriteToFile( result, programData.outputFileName );
     }
     catch( ShowHelpAndExit& )
     {

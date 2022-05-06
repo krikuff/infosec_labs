@@ -38,13 +38,13 @@ struct ProgramSettings
     CypherType cypher;
 };
 
-std::string CypherToString(CypherType cypher);
+std::string CypherToString( CypherType cypher );
 
-CypherType StringToCypher(std::string const& cypher);
+CypherType StringToCypher( std::string const& cypher );
 
-std::string ReadFileContents(std::string const& filename);
+std::string ReadFileContents( std::string const& filename );
 
-void WriteToFile(std::string const& data, std::string const& filename);
+void WriteToFile( std::string const& data, std::string const& filename );
 
 // Определение поддерживаемых аргументов командной строки
 OptionsDescriptionMap GetOptionsDescription();
@@ -52,4 +52,4 @@ OptionsDescriptionMap GetOptionsDescription();
 std::string GetProjectVersionString();
 
 // Получение настроек из переданных аргументов
-ProgramSettings ProcessArguments(int argc, char** argv);
+ProgramSettings ProcessArguments( int argc, char** argv );
